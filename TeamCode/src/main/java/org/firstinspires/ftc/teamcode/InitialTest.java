@@ -29,6 +29,8 @@ public class InitialTest extends OpMode { // Linear or Iterative OpMode?
         //Sensing.updateIMU();
         //Motors.rotateToAngleByProportional(-175);
         telemetry.addData("Running", "True");
+        telemetry.addData("Yay?", "Yay!");
+        telemetry.addData("OverWireless", "True");
     }
 
     @Override
