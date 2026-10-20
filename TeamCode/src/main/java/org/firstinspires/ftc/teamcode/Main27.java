@@ -33,7 +33,17 @@ public class Main27 extends OpMode { // Linear or Iterative OpMode?
     public void loop() {
         //Sensing.updateIMU();
         //Motors.rotateToAngleByProportional(-175);
-        telemetry.addData("Running", "True");
+        telemetry.addData("Running", Motors.angleWrapDeg(Sensing.yaw - 90));
+
+        if (Motors.angleWrapDeg(Sensing.yaw) > 1 || Motors.angleWrapDeg(Sensing.yaw) < -1) {
+            Motors.rotateToAngleByProportional(0);
+        }
+        else {
+            //Motors.driveWithPower(0,0,0,0);
+            Motors.driveWithDirections(0.5, 0.5, 0.01, Sensing.yaw);
+        }
+
+        Sensing.updateIMU();
     }
 
     @Override

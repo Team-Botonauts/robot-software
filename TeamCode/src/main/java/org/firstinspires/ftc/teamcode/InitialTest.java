@@ -32,11 +32,13 @@ public class InitialTest extends OpMode { // Linear or Iterative OpMode?
 
 
     DcMotor testMotor;
+    Servo testServo;
 
 
     @Override
     public void init() {
         testMotor = hardwareMap.get(DcMotor.class, "testMotor");
+        testServo = hardwareMap.get(Servo.class, "testServo");
     }
 
     @Override
@@ -45,7 +47,7 @@ public class InitialTest extends OpMode { // Linear or Iterative OpMode?
 
     @Override
     public void start() {
-        testMotor.setPower(0);
+        testServo.setPosition(0.8);
     }
 
     @Override

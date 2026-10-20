@@ -46,7 +46,7 @@ public class Sensing {
                 new IMU.Parameters(
                         new RevHubOrientationOnRobot(
                                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                                RevHubOrientationOnRobot.UsbFacingDirection.DOWN
+                                RevHubOrientationOnRobot.UsbFacingDirection.UP
                         )
                 )
         );
@@ -67,9 +67,9 @@ public class Sensing {
         YawPitchRollAngles robotOrientation;
         robotOrientation = imu.getRobotYawPitchRollAngles();
 
-        yaw = robotOrientation.getYaw(AngleUnit.DEGREES);
-        pitch = robotOrientation.getPitch(AngleUnit.DEGREES);
-        roll = robotOrientation.getRoll(AngleUnit.DEGREES);
+        yaw = -robotOrientation.getYaw(AngleUnit.DEGREES);
+        pitch = robotOrientation.getPitch(AngleUnit.RADIANS);
+        roll = robotOrientation.getRoll(AngleUnit.RADIANS);
 
         telemetry.addData("Yaw", yaw);
         telemetry.addData("Pitch", pitch);

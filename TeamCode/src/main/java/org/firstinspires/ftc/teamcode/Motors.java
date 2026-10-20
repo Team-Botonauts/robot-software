@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 // import libraries
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -35,21 +36,34 @@ public class Motors {
 
 
         // setup drive motors
-        this.topRight = setupDriveMotor("topRight", DcMotor.Direction.REVERSE);
-        this.topLeft = setupDriveMotor("topLeft", DcMotor.Direction.REVERSE);
-        this.bottomLeft = setupDriveMotor("bottomLeft", DcMotor.Direction.REVERSE);
-        this.bottomRight = setupDriveMotor("bottomRight", DcMotor.Direction.FORWARD);
+        this.topRight = setupDriveMotor("topRight", DcMotor.Direction.FORWARD);
+        this.topLeft = setupDriveMotor("topLeft", DcMotor.Direction.FORWARD);
+        this.bottomLeft = setupDriveMotor("bottomLeft", DcMotor.Direction.FORWARD);
+        this.bottomRight = setupDriveMotor("bottomRight", DcMotor.Direction.FORWARD); // only one that is correct
 
     }
 
     // This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.
-    public double angleWrap(double degrees) {
+    public double angleWrapDeg(double degrees) {
 
         while (degrees > 180) {
             degrees -= 2 * 180;
         }
         while (degrees < -180) {
             degrees += 2 * 180;
+        }
+
+        // keep in mind that the result is in radians
+        return degrees;
+    }
+
+    public double angleWrapRad(double degrees) {
+
+        while (degrees > Math.PI) {
+            degrees -= 2 * Math.PI;
+        }
+        while (degrees < -Math.PI) {
+            degrees += 2 * Math.PI;
         }
 
         // keep in mind that the result is in radians
@@ -77,11 +91,12 @@ public class Motors {
         this.topRight.setPower(topRightPower);
     }
 
-    // move robot with with vectors and a rotation, relative to the arena
+    // move robot with vectors and a rotation, relative to the arena
     public void driveWithDirections(double y, double x, double theta, double currentAngle) {
         // rotate the directions relative to the robot
-        double x_rotated = x * Math.cos(currentAngle) - y * Math.sin(currentAngle);
-        double y_rotated = x * Math.sin(currentAngle) + y * Math.cos(currentAngle);
+        theta = angleWrapRad(-theta);
+        double x_rotated = y * Math.cos(currentAngle) - x * Math.sin(currentAngle);
+        double y_rotated = y * Math.sin(currentAngle) + x * Math.cos(currentAngle);
         // apply to motors
         driveRelativeToRobot(x_rotated, y_rotated, theta);
     }
@@ -98,7 +113,7 @@ public class Motors {
 
     // rotate to an angle relative to the arena - doesn't work yet!
     public void rotateToAngleByProportional(double angle) {
-        double differenceInAngles = angleWrap(angle + Sensing.yaw);
+        double differenceInAngles = angleWrapDeg(angle - Sensing.yaw);
 
         telemetry.addData("error", differenceInAngles);
 
