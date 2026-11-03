@@ -94,9 +94,12 @@ public class Motors {
     // move robot with vectors and a rotation, relative to the arena
     public void driveWithDirections(double y, double x, double theta, double currentAngle) {
         // rotate the directions relative to the robot
-        theta = angleWrapRad(-theta);
-        double x_rotated = y * Math.cos(currentAngle) - x * Math.sin(currentAngle);
-        double y_rotated = y * Math.sin(currentAngle) + x * Math.cos(currentAngle);
+
+
+        //theta = angleWrapRad(-theta);
+        currentAngle = (currentAngle * Math.PI) / 180.0;
+        double x_rotated = y * Math.cos(-currentAngle) - x * Math.sin(-currentAngle);
+        double y_rotated = y * Math.sin(-currentAngle) + x * Math.cos(-currentAngle);
         // apply to motors
         driveRelativeToRobot(x_rotated, y_rotated, theta);
     }
@@ -107,6 +110,18 @@ public class Motors {
         double bottomRightPower = x_rotated + y_rotated - theta;
         double topLeftPower = x_rotated + y_rotated + theta;
         double topRightPower = x_rotated - y_rotated - theta;
+
+        double max = Math.max(
+                Math.max(Math.abs(bottomLeftPower), Math.abs(bottomRightPower)),
+                Math.max(Math.abs(topLeftPower), Math.abs(topRightPower))
+        );
+
+        if (max > 1.0){
+            bottomLeftPower /= max + 0.3;
+            bottomRightPower /= max + 0.3;
+            topLeftPower /= max + 0.3;
+            topRightPower /= max + 0.3;
+        }
 
         this.driveWithPower(bottomLeftPower, bottomRightPower, topLeftPower, topRightPower);
     }
