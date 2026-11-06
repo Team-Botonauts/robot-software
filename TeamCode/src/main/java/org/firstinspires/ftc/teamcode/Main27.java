@@ -33,9 +33,11 @@ public class Main27 extends OpMode { // Linear or Iterative OpMode?
     public void loop() {
         Sensing.updateIMU();
         //Motors.rotateToAngleByProportional(-175);Motors.angleWrapDeg(Sensing.yaw - 90)
-        telemetry.addData("Running",Sensing.yaw);
+        telemetry.addData("Sensing Yaw: ",Math.toDegrees((Sensing.yaw)));
 
-        Motors.driveWithDirections(0.5, 0, 0.3, Sensing.yaw);
+        Motors.driveWithDirections(0.2, 0, 0.8, Sensing.yaw);
+        //Motors.driveWithPower(-0.2, 0.2,0.2,-0.2);
+       // Motors.driveRelativeToRobot(0.2,0, 0);
 
         //if (Motors.angleWrapDeg(Sensing.yaw) > 1 || Motors.angleWrapDeg(Sensing.yaw) < -1) {
            // Motors.rotateToAngleByProportional(90);
@@ -45,7 +47,6 @@ public class Main27 extends OpMode { // Linear or Iterative OpMode?
             //Motors.driveWithDirections(0.5, 0.5, 0.01, Sensing.yaw);
         //}
 
-        Sensing.updateIMU();
     }
 
     @Override

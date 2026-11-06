@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 // import libraries
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -92,24 +91,29 @@ public class Motors {
     }
 
     // move robot with vectors and a rotation, relative to the arena
-    public void driveWithDirections(double y, double x, double theta, double currentAngle) {
+    public void driveWithDirections(double x, double y, double theta, double currentAngle) {
         // rotate the directions relative to the robot
 
 
         //theta = angleWrapRad(-theta);
-        currentAngle = (currentAngle * Math.PI) / 180.0;
-        double x_rotated = y * Math.cos(-currentAngle) - x * Math.sin(-currentAngle);
-        double y_rotated = y * Math.sin(-currentAngle) + x * Math.cos(-currentAngle);
+        //currentAngle = (currentAngle * Math.PI) / 180.0;
+        double x_rotated = x * Math.cos(currentAngle) + y * Math.sin(currentAngle);
+        double y_rotated = -x * Math.sin(currentAngle) + y * Math.cos(currentAngle);
         // apply to motors
         driveRelativeToRobot(x_rotated, y_rotated, theta);
     }
 
     // move robot with vectors and a rotation, relative to the robot
-    public void driveRelativeToRobot(double x_rotated, double y_rotated, double theta) {
-        double bottomLeftPower = x_rotated - y_rotated + theta;
+    public void driveRelativeToRobot(double x, double y_rotated, double theta) {
+        double x_rotated = x*1.24;
+        /*double bottomLeftPower = x_rotated - y_rotated + theta;
         double bottomRightPower = x_rotated + y_rotated - theta;
         double topLeftPower = x_rotated + y_rotated + theta;
-        double topRightPower = x_rotated - y_rotated - theta;
+        double topRightPower = x_rotated - y_rotated - theta;*/
+        double topLeftPower  = y_rotated + x_rotated + theta;
+        double topRightPower = y_rotated - x_rotated - theta;
+        double bottomLeftPower   = y_rotated - x_rotated + theta;
+        double bottomRightPower  = y_rotated + x_rotated - theta;
 
         double max = Math.max(
                 Math.max(Math.abs(bottomLeftPower), Math.abs(bottomRightPower)),
@@ -117,11 +121,12 @@ public class Motors {
         );
 
         if (max > 1.0){
-            bottomLeftPower /= max + 0.3;
-            bottomRightPower /= max + 0.3;
-            topLeftPower /= max + 0.3;
-            topRightPower /= max + 0.3;
-        }
+            telemetry.addData("Overpowered: ", true);
+            bottomLeftPower /= max;
+            bottomRightPower /= max;
+            topLeftPower /= max;
+            topRightPower /= max;
+        } else telemetry.addData("Overpowered: ", false);
 
         this.driveWithPower(bottomLeftPower, bottomRightPower, topLeftPower, topRightPower);
     }
